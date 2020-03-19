@@ -10,9 +10,16 @@
     <ImageButton
         android:id="@+id/button_brush"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/brush"
         android:src="@drawable/brush"/>
+
+    <ImageButton
+        android:id="@+id/button_erase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/erase"
+        android:src="@drawable/eraser" />
 
     <fi.tamk.tuni.paintapp.PaintView
         android:id="@+id/paint_view"
