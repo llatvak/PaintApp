@@ -8,6 +8,13 @@
     tools:context=".MainActivity">
 
     <ImageButton
+        android:id="@+id/button_new_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/start_new"
+        android:src="@drawable/new_file" />
+
+    <ImageButton
         android:id="@+id/button_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
