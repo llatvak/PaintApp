@@ -52,6 +52,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             brushDialog.setTitle("Brush size:");
             brushDialog.setContentView(R.layout.brush_dialog_layout);
             brushDialog.show();
+
+            ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
+            smallBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    mPaintView.setBrushSize(mSmallBrush);
+                    mPaintView.setLastBrushSize(mSmallBrush);
+                    brushDialog.dismiss();
+                }
+            });
+
+            ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
+            mediumBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    mPaintView.setBrushSize(mMediumBrush);
+                    mPaintView.setLastBrushSize(mMediumBrush);
+                    brushDialog.dismiss();
+                }
+            });
+
+            ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
+            largeBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    mPaintView.setBrushSize(mLargeBrush);
+                    mPaintView.setLastBrushSize(mLargeBrush);
+                    brushDialog.dismiss();
+                }
+            });
         }
     }
 }

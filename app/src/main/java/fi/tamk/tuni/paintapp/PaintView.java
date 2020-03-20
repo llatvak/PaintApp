@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,6 +20,7 @@ public class PaintView extends View {
     private int mPaintColor = 0xFF000000;
     private Canvas mDrawCanvas;
     private Bitmap mCanvasBitmap;
+    private float mBrushSize, mLastBrushSize;
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -30,7 +32,9 @@ public class PaintView extends View {
         mDrawPaint = new Paint();
         mDrawPaint.setColor(mPaintColor);
         mDrawPaint.setAntiAlias(true);
-        mDrawPaint.setStrokeWidth(20);
+        mBrushSize = getResources().getInteger(R.integer.medium_size);
+        mLastBrushSize = mBrushSize;
+        mDrawPaint.setStrokeWidth(mBrushSize);
         mDrawPaint.setStyle(Paint.Style.STROKE);
         mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
         mDrawPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -76,5 +80,20 @@ public class PaintView extends View {
         invalidate();
         this.mPaintColor = Color.parseColor(newColor);
         mDrawPaint.setColor(mPaintColor);
+    }
+
+    public void setBrushSize(float newSize) {
+        float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                newSize, getResources().getDisplayMetrics());
+        this.mBrushSize = pixelAmount;
+        mDrawPaint.setStrokeWidth(mBrushSize);
+    }
+
+    public void setLastBrushSize(float lastSize) {
+        this.mLastBrushSize = lastSize;
+    }
+
+    public float getLastBrushSize() {
+        return mLastBrushSize;
     }
 }
