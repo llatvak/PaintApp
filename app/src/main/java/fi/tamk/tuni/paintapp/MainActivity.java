@@ -2,6 +2,7 @@ package fi.tamk.tuni.paintapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -46,6 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
+        if(v.getId() == R.id.button_brush) {
+            final Dialog brushDialog = new Dialog(this);
+            brushDialog.setTitle("Brush size:");
+            brushDialog.setContentView(R.layout.brush_dialog_layout);
+            brushDialog.show();
+        }
     }
 }
