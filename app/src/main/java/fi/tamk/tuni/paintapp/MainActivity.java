@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private PaintView mPaintView;
-    private ImageButton mCurrentPaint, mBrushButton, mEraseButton;
+    private ImageButton mCurrentPaint, mBrushButton, mEraseButton, mNewButton;
     private float mXtraSmallBrush, mSmallBrush, mMediumBrush, mLargeBrush;
 
     @Override
@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Init erase button
         mEraseButton = (ImageButton) findViewById(R.id.button_erase);
         mEraseButton.setOnClickListener(this);
+        // Init new draw button
+        mNewButton = (ImageButton) findViewById(R.id.button_new_file);
+        mNewButton.setOnClickListener(this);
     }
 
     public void colorClicked(View view) {
@@ -59,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
         ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
         ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
-        brushDialog.show();
         switch(v.getId()) {
             case R.id.button_brush:
+                brushDialog.show();
                 mPaintView.setEraseMode(false);
                 mPaintView.setBrushSize(mPaintView.getLastBrushSize());
                 xtraSmallBtn.setOnClickListener((l) -> {
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.button_erase:
+                brushDialog.show();
                 xtraSmallBtn.setOnClickListener((l) -> {
                     mPaintView.setEraseMode(true);
                     mPaintView.setBrushSize(mXtraSmallBrush);
@@ -106,6 +110,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mPaintView.setBrushSize(mLargeBrush);
                     brushDialog.dismiss();
                 });
+                break;
+            case R.id.button_new_file:
+                mPaintView.startNew();
+                break;
         }
     }
 }
