@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -21,6 +23,7 @@ public class PaintView extends View {
     private Canvas mDrawCanvas;
     private Bitmap mCanvasBitmap;
     private float mBrushSize, mLastBrushSize;
+    private boolean mEraseMode = false;
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -95,5 +98,14 @@ public class PaintView extends View {
 
     public float getLastBrushSize() {
         return mLastBrushSize;
+    }
+
+    public void setEraseMode(boolean isErase) {
+        mEraseMode = isErase;
+        if(mEraseMode) {
+            mDrawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        } else {
+            mDrawPaint.setXfermode(null);
+        }
     }
 }
