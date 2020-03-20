@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,7 +13,7 @@ import android.widget.LinearLayout;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private PaintView mPaintView;
-    private ImageButton mCurrentPaint, mBrushButton, mEraseButton, mNewButton;
+    private ImageButton mCurrentPaint, mBrushButton, mEraseButton, mNewButton, mSaveButton;
     private float mXtraSmallBrush, mSmallBrush, mMediumBrush, mLargeBrush;
 
     @Override
@@ -41,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Init new draw button
         mNewButton = (ImageButton) findViewById(R.id.button_new_file);
         mNewButton.setOnClickListener(this);
+        // Init save file button
+        mSaveButton = (ImageButton) findViewById(R.id.button_save);
+        mSaveButton.setOnClickListener(this);
     }
 
     public void colorClicked(View view) {
@@ -125,6 +127,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     l.cancel();
                 });
                 newDialog.show();
+                break;
+            case R.id.button_save:
+                AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
+                saveDialog.setTitle("Save drawing");
+                saveDialog.setMessage("Save drawing to device Gallery?");
+                saveDialog.setPositiveButton("Yes", (l, w) -> {
+
+                });
+                saveDialog.setNegativeButton("Cancel", (l, w) -> {
+                    l.cancel();
+                });
+                saveDialog.show();
                 break;
         }
     }
