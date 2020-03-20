@@ -72,24 +72,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()) {
             case R.id.button_brush:
                 brushDialog.show();
-                mPaintView.setEraseMode(false);
                 mPaintView.setBrushSize(mPaintView.getLastBrushSize());
                 xtraSmallBtn.setOnClickListener((l) -> {
+                    mPaintView.setEraseMode(false);
                     mPaintView.setBrushSize(mXtraSmallBrush);
                     mPaintView.setLastBrushSize(mXtraSmallBrush);
                     brushDialog.dismiss();
                 });
                 smallBtn.setOnClickListener((l) -> {
+                    mPaintView.setEraseMode(false);
                     mPaintView.setBrushSize(mSmallBrush);
                     mPaintView.setLastBrushSize(mSmallBrush);
                     brushDialog.dismiss();
                 });
                 mediumBtn.setOnClickListener((l) -> {
+                    mPaintView.setEraseMode(false);
                     mPaintView.setBrushSize(mMediumBrush);
                     mPaintView.setLastBrushSize(mMediumBrush);
                     brushDialog.dismiss();
                 });
                 largeBtn.setOnClickListener((l) -> {
+                    mPaintView.setEraseMode(false);
                     mPaintView.setBrushSize(mLargeBrush);
                     mPaintView.setLastBrushSize(mLargeBrush);
                     brushDialog.dismiss();

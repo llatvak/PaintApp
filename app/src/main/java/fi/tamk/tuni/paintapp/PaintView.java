@@ -2,8 +2,10 @@ package fi.tamk.tuni.paintapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -24,6 +26,8 @@ public class PaintView extends View {
     private Bitmap mCanvasBitmap;
     private float mBrushSize, mLastBrushSize;
     private boolean mEraseMode = false;
+    private MaskFilter mBlur;
+    private boolean mBlurMode = false;
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -33,15 +37,18 @@ public class PaintView extends View {
     public void initializePaintView() {
         mPath = new Path();
         mDrawPaint = new Paint();
-        mDrawPaint.setColor(mPaintColor);
         mDrawPaint.setAntiAlias(true);
-        mBrushSize = getResources().getInteger(R.integer.medium_size);
-        mLastBrushSize = mBrushSize;
-        mDrawPaint.setStrokeWidth(mBrushSize);
         mDrawPaint.setStyle(Paint.Style.STROKE);
         mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
         mDrawPaint.setStrokeCap(Paint.Cap.ROUND);
+        mDrawPaint.setDither(true);
+        mDrawPaint.setAlpha(0xff);
         mCanvasPaint = new Paint(Paint.DITHER_FLAG);
+        mBlur = new BlurMaskFilter(mBrushSize, BlurMaskFilter.Blur.NORMAL);
+        mDrawPaint.setColor(mPaintColor);
+        mBrushSize = getResources().getInteger(R.integer.medium_size);
+        mLastBrushSize = mBrushSize;
+        mDrawPaint.setStrokeWidth(mBrushSize);
     }
 
     @Override
