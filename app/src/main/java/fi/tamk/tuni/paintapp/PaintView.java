@@ -16,7 +16,7 @@ public class PaintView extends View {
 
     private Path mPath;
     private Paint mDrawPaint, mCanvasPaint;
-    private int mPaintColor = 0xFF660000;
+    private int mPaintColor = 0xFF000000;
     private Canvas mDrawCanvas;
     private Bitmap mCanvasBitmap;
 

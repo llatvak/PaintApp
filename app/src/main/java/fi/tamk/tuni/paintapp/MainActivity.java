@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mPaintView = (PaintView) findViewById(R.id.paint_view);
         // Retrieve color currently used by user from the color layout
-        LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
-        mCurrentPaint = (ImageButton) paintLayout.getChildAt(0);
+        LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors2);
+        mCurrentPaint = (ImageButton) paintLayout.getChildAt(5);
         mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
     }
 
