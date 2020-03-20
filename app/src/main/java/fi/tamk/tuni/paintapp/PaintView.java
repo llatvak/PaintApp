@@ -38,6 +38,9 @@ public class PaintView extends View {
         mPath = new Path();
         mDrawPaint = new Paint();
         mDrawPaint.setAntiAlias(true);
+        mBrushSize = getResources().getInteger(R.integer.medium_size);
+        mLastBrushSize = mBrushSize;
+        mDrawPaint.setStrokeWidth(mBrushSize);
         mDrawPaint.setStyle(Paint.Style.STROKE);
         mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
         mDrawPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -46,9 +49,6 @@ public class PaintView extends View {
         mCanvasPaint = new Paint(Paint.DITHER_FLAG);
         mBlur = new BlurMaskFilter(mBrushSize, BlurMaskFilter.Blur.NORMAL);
         mDrawPaint.setColor(mPaintColor);
-        mBrushSize = getResources().getInteger(R.integer.medium_size);
-        mLastBrushSize = mBrushSize;
-        mDrawPaint.setStrokeWidth(mBrushSize);
     }
 
     @Override
