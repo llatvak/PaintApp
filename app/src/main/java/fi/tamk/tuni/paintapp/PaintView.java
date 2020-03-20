@@ -67,6 +67,7 @@ public class PaintView extends View {
             default:
                 return false;
         }
+        invalidate();
         return true;
     }
 }
