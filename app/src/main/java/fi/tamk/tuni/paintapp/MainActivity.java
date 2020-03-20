@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -133,11 +136,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 saveDialog.setTitle("Save drawing");
                 saveDialog.setMessage("Save drawing to device Gallery?");
                 saveDialog.setPositiveButton("Yes", (l, w) -> {
-
+                    mPaintView.setDrawingCacheEnabled(true);
+                    String imgSaved = MediaStore.Images.Media.insertImage(
+                            getContentResolver(), mPaintView.getDrawingCache(),
+                            UUID.randomUUID().toString() + ".png", "drawing");
+                    if (imgSaved != null) {
+                        Toast.makeText(getApplicationContext(), "Drawing saved to Gallery!", Toast.LENGTH_SHORT).show();
+                        mPaintView.destroyDrawingCache();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Oops! Image could not be saved.", Toast.LENGTH_SHORT).show();
+                    }
                 });
-                saveDialog.setNegativeButton("Cancel", (l, w) -> {
-                    l.cancel();
-                });
+                saveDialog.setNegativeButton("Cancel", (l, w) -> l.cancel());
                 saveDialog.show();
                 break;
         }
