@@ -3,6 +3,7 @@ package fi.tamk.tuni.paintapp;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -69,5 +70,11 @@ public class PaintView extends View {
         }
         invalidate();
         return true;
+    }
+
+    public void setColor(String newColor) {
+        invalidate();
+        this.mPaintColor = Color.parseColor(newColor);
+        mDrawPaint.setColor(mPaintColor);
     }
 }

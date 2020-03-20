@@ -26,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void colorClicked(View view) {
-
+        if(view != mCurrentPaint) {
+            ImageButton imgView = (ImageButton) view;
+            String color = view.getTag().toString();
+            mPaintView.setColor(color);
+            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+            mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+            mCurrentPaint = (ImageButton) view;
+        }
     }
 }
