@@ -8,10 +8,11 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private PaintView mPaintView;
-    private ImageButton mCurrentPaint;
+    private ImageButton mCurrentPaint, mBrushButton;
+    private float mSmallBrush, mMediumBrush, mLargeBrush;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,13 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors2);
         mCurrentPaint = (ImageButton) paintLayout.getChildAt(5);
         mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+        // Init brush sizes
+        mSmallBrush = getResources().getInteger(R.integer.small_size);
+        mMediumBrush = getResources().getInteger(R.integer.medium_size);
+        mLargeBrush = getResources().getInteger(R.integer.large_size);
+        // Init brush button
+        mBrushButton = (ImageButton) findViewById(R.id.button_brush);
+        mBrushButton.setOnClickListener(this);
     }
 
     public void colorClicked(View view) {
@@ -34,5 +42,10 @@ public class MainActivity extends AppCompatActivity {
             mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
             mCurrentPaint = (ImageButton) view;
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
