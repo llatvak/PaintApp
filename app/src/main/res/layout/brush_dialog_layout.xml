@@ -2,7 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     android:gravity="center">
+
+    <ImageButton
+        android:id="@+id/xtra_small_brush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="@string/xtra_sml"
+        android:src="@drawable/xtra_small" />
 
     <ImageButton
         android:id="@+id/small_brush"

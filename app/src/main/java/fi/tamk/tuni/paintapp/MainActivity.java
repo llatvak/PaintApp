@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private PaintView mPaintView;
     private ImageButton mCurrentPaint, mBrushButton;
-    private float mSmallBrush, mMediumBrush, mLargeBrush;
+    private float mXtraSmallBrush, mSmallBrush, mMediumBrush, mLargeBrush;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCurrentPaint = (ImageButton) paintLayout.getChildAt(5);
         mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
         // Init brush sizes
+        mXtraSmallBrush = getResources().getInteger(R.integer.xtra_small_size);
         mSmallBrush = getResources().getInteger(R.integer.small_size);
         mMediumBrush = getResources().getInteger(R.integer.medium_size);
         mLargeBrush = getResources().getInteger(R.integer.large_size);
@@ -49,9 +50,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if(v.getId() == R.id.button_brush) {
             final Dialog brushDialog = new Dialog(this);
-            brushDialog.setTitle("Brush size:");
             brushDialog.setContentView(R.layout.brush_dialog_layout);
             brushDialog.show();
+
+            ImageButton xtraSmallBtn = (ImageButton)brushDialog.findViewById(R.id.xtra_small_brush);
+            xtraSmallBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    mPaintView.setBrushSize(mXtraSmallBrush);
+                    mPaintView.setLastBrushSize(mXtraSmallBrush);
+                    brushDialog.dismiss();
+                }
+            });
 
             ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
             smallBtn.setOnClickListener(new View.OnClickListener(){
