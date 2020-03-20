@@ -2,7 +2,9 @@ package fi.tamk.tuni.paintapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -112,7 +114,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.button_new_file:
-                mPaintView.startNew();
+                AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
+                newDialog.setTitle("New drawing");
+                newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
+                newDialog.setPositiveButton("Yes", (l, w) -> {
+                    mPaintView.startNew();
+                    l.dismiss();
+                });
+                newDialog.setNegativeButton("Cancel", (l, w) -> {
+                    l.cancel();
+                });
+                newDialog.show();
                 break;
         }
     }
