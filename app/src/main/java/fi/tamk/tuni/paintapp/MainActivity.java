@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private PaintView mPaintView;
-    private ImageButton mCurrentPaint, mBrushButton, mEraseButton, mNewButton, mSaveButton;
+    private ImageButton mCurrentPaint, mBrushButton, mEraseButton, mNewButton, mSaveButton, mUndoButton, mShareButton;
     private float mXtraSmallBrush, mSmallBrush, mMediumBrush, mLargeBrush;
 
     @Override
@@ -46,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Init save file button
         mSaveButton = (ImageButton) findViewById(R.id.button_save);
         mSaveButton.setOnClickListener(this);
+        // Init undo button
+        mUndoButton = (ImageButton) findViewById(R.id.button_undo);
+        mUndoButton.setOnClickListener(this);
+        // Init share button
+        mShareButton = (ImageButton) findViewById(R.id.button_share);
+        mShareButton.setOnClickListener(this);
     }
 
     public void colorClicked(View view) {
@@ -152,6 +158,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 saveDialog.setNegativeButton("Cancel", (l, w) -> l.cancel());
                 saveDialog.show();
+                break;
+            case R.id.button_undo:
+                // Undo button logic
+                mPaintView.removeRecentPath();
+                break;
+            case R.id.button_share:
+                // Share button logic
                 break;
         }
     }
