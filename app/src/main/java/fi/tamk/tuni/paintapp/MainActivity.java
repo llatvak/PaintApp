@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mPaintView = (PaintView) findViewById(R.id.paint_view);
         // Retrieve color currently used by user from the color layout
-        LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors2);
-        mCurrentPaint = (ImageButton) paintLayout.getChildAt(5);
+        LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors1);
+        mCurrentPaint = (ImageButton) paintLayout.getChildAt(0);
         mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
         // Init brush sizes
         mXtraSmallBrush = getResources().getInteger(R.integer.xtra_small_size);

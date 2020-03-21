@@ -38,7 +38,7 @@ public class PaintView extends View {
         mPath = new Path();
         mDrawPaint = new Paint();
         mDrawPaint.setAntiAlias(true);
-        mBrushSize = getResources().getInteger(R.integer.medium_size);
+        mBrushSize = getResources().getInteger(R.integer.small_size);
         mLastBrushSize = mBrushSize;
         mDrawPaint.setStrokeWidth(mBrushSize);
         mDrawPaint.setStyle(Paint.Style.STROKE);
