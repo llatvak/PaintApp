@@ -15,22 +15,26 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 import androidx.annotation.Nullable;
 
 public class PaintView extends View {
 
     private Path mPath;
     private Paint mDrawPaint, mCanvasPaint;
-    private int mPaintColor = 0xFF000000;
+    private int mPaintColor = Color.parseColor("#000000");
     private Canvas mDrawCanvas;
     private Bitmap mCanvasBitmap;
     private float mBrushSize, mLastBrushSize;
     private boolean mEraseMode = false;
     private MaskFilter mBlur;
     private boolean mBlurMode = false;
+    private ArrayList<Path> paths = new ArrayList<>();
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
         initializePaintView();
     }
 
@@ -38,17 +42,16 @@ public class PaintView extends View {
         mPath = new Path();
         mDrawPaint = new Paint();
         mDrawPaint.setAntiAlias(true);
-        mBrushSize = getResources().getInteger(R.integer.medium_size);
-        mLastBrushSize = mBrushSize;
-        mDrawPaint.setStrokeWidth(mBrushSize);
+        mDrawPaint.setDither(true);
+        mDrawPaint.setColor(mPaintColor);
         mDrawPaint.setStyle(Paint.Style.STROKE);
         mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
         mDrawPaint.setStrokeCap(Paint.Cap.ROUND);
-        mDrawPaint.setDither(true);
-        mDrawPaint.setAlpha(0xff);
         mCanvasPaint = new Paint(Paint.DITHER_FLAG);
+        mBrushSize = getResources().getInteger(R.integer.small_size);
+        mLastBrushSize = mBrushSize;
         mBlur = new BlurMaskFilter(mBrushSize, BlurMaskFilter.Blur.NORMAL);
-        mDrawPaint.setColor(mPaintColor);
+        mDrawPaint.setStrokeWidth(mBrushSize);
     }
 
     @Override
@@ -119,5 +122,13 @@ public class PaintView extends View {
     public void startNew() {
         mDrawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         invalidate();
+    }
+
+    public void removeRecentPath() {
+        if(!paths.isEmpty()) {
+            System.out.println(paths.size());
+            paths.remove(paths.get(paths.size() -1 ));
+            invalidate();
+        }
     }
 }

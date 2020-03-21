@@ -4,6 +4,8 @@
     <string name="brush">Brush</string>
     <string name="erase">Erase</string>
     <string name="save">Save</string>
+    <string name="undo">Undo</string>
+    <string name="share">Share</string>
     <string name="paint">Paint</string>
     <string name="xtra_sml">Paint</string>
     <string name="sml">Small</string>
