@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/holo_orange_light"
-    android:layout_marginBottom="20dp"
+    android:paddingBottom="20dp"
+    android:background="#DEDEDE"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:background="@android:color/holo_orange_light"
+        android:background="#DEDEDE"
         android:orientation="horizontal" >
 
         <ImageButton
@@ -22,6 +22,7 @@
             android:layout_height="52dp"
             android:contentDescription="@string/start_new"
             android:layout_marginEnd="10dp"
+            android:backgroundTint="#AAAAAA"
             android:src="@drawable/ic_clear" />
 
         <ImageButton
@@ -30,6 +31,7 @@
             android:layout_height="52dp"
             android:contentDescription="@string/brush"
             android:layout_marginEnd="10dp"
+            android:backgroundTint="#AAAAAA"
             android:src="@drawable/ic_draw"/>
 
         <ImageButton
@@ -38,6 +40,7 @@
             android:layout_height="52dp"
             android:contentDescription="@string/erase"
             android:layout_marginEnd="10dp"
+            android:backgroundTint="#AAAAAA"
             android:src="@drawable/ic_erase" />
 
         <ImageButton
@@ -46,6 +49,7 @@
             android:layout_height="52dp"
             android:contentDescription="@string/save"
             android:layout_marginEnd="10dp"
+            android:backgroundTint="#AAAAAA"
             android:src="@drawable/ic_save" />
     </LinearLayout>
 
@@ -53,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@android:color/holo_orange_light"
+        android:background="#DEDEDE"
         android:orientation="vertical" >
 
         <LinearLayout
