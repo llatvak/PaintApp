@@ -61,13 +61,13 @@
             android:src="@drawable/ic_undo" />
 
         <ImageButton
-            android:id="@+id/button_share"
+            android:id="@+id/button_redo"
             android:layout_width="62dp"
             android:layout_height="52dp"
-            android:contentDescription="@string/share"
+            android:contentDescription="@string/redo"
             android:layout_marginEnd="8dp"
             android:backgroundTint="#AAAAAA"
-            android:src="@drawable/ic_share" />
+            android:src="@drawable/ic_redo" />
     </LinearLayout>
 
     <LinearLayout
