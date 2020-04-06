@@ -40,7 +40,7 @@ public class PaintView extends View {
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setLayerType(LAYER_TYPE_SOFTWARE, null);
+        //setLayerType(LAYER_TYPE_SOFTWARE, null);
         initializePaintView();
     }
 
