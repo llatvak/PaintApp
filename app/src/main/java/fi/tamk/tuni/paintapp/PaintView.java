@@ -36,6 +36,8 @@ public class PaintView extends View {
     float mX = 0;
     float mY = 0;
     boolean something = false;
+    private int previousColor;
+    private float mPreviousBrushSize;
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -68,23 +70,15 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        //canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
+        //canvas.drawPath(mPath, mDrawPaint);
+
         if(!something) {
             canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
             canvas.drawPath(mPath, mDrawPaint);
         }
-        /*
-        canvas.save();
-        mDrawCanvas.drawColor(backgroundColor);
-        for (DrawPath dp : paths) {
-            mDrawPaint.setColor(dp.color);
-            mDrawPaint.setStrokeWidth(dp.strokeWidth);
-            //mDrawCanvas.drawPath(dp.path, mDrawPaint);
-        }
-        canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
-        canvas.restore();
-        */
+
         if(something) {
-            System.out.println(paths);
             canvas.save();
             mDrawCanvas.drawColor(backgroundColor);
             for (DrawPath dp : paths) {
@@ -96,8 +90,6 @@ public class PaintView extends View {
             canvas.restore();
             something = false;
         }
-        //System.out.println(paths);
-        // invalidate();
     }
 
     @Override
@@ -106,18 +98,28 @@ public class PaintView extends View {
         float touchY = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                //mPath = new Path();
-                //DrawPath d = new DrawPath(mPaintColor, 10, mPath);
-                //paths.add(d);
                 mPath.reset();
+
+                    if(mPaintColor != 0 && !mEraseMode) {
+                        previousColor = mPaintColor;
+                        mPreviousBrushSize = mBrushSize;
+                        System.out.println("Ennen " + mPaintColor);
+                        String hexColor = String.format("#%06X", (0xFFFFFF & previousColor));
+                        setColor(hexColor);
+                        mBrushSize = mPreviousBrushSize;
+                        System.out.println("Jälkeen " + mPaintColor);
+                    } else {
+                        mDrawPaint.setColor(mPaintColor);
+                        mDrawPaint.setStrokeWidth(mBrushSize);
+                    }
+
                 mPath.moveTo(touchX, touchY);
                 mX = touchX;
                 mY = touchY;
+                invalidate();
+
                 break;
             case MotionEvent.ACTION_MOVE:
-                //mPath.lineTo(touchX, touchY);
-                //mX = touchX;
-                //mY = touchY;
                 float dx = Math.abs(touchX - mX);
                 float dy = Math.abs(touchY - mY);
                 if (dx >= 4 || dy >= 4) {
@@ -125,46 +127,52 @@ public class PaintView extends View {
                     mX = touchX;
                     mY = touchY;
                 }
+                invalidate();
+
                 break;
             case MotionEvent.ACTION_UP:
-                if(something) {
-                    System.out.println("SOMETHING TRUE");
-                    System.out.println(mPaintColor);
-                    System.out.println(mBrushSize);
-                    mPath.lineTo(mX, mY);
-                    mDrawCanvas.drawPath(mPath, mDrawPaint);
-                    //mPath.reset();
-                    //mPath = new Path();
-                } else {
-                    System.out.println("SOMETHING FALSE");
-                    System.out.println(mPaintColor);
-                    System.out.println(mBrushSize);
-                    mPath.lineTo(mX, mY);
-                    mDrawCanvas.drawPath(mPath, mDrawPaint);
-                    //DrawPath d = new DrawPath(mPaintColor, (int)mBrushSize, mPath);
-                    DrawPath d = new DrawPath(mPaintColor, (int)mBrushSize, mPath);
-                    paths.add(d);
-                    //mPath.reset();
-                    mPath = new Path();
-                }
+                mPath.lineTo(mX, mY);
+                mDrawCanvas.drawPath(mPath, mDrawPaint);
+                DrawPath d = new DrawPath(mPaintColor, (int)mBrushSize, mPath);
+                paths.add(d);
+                mPath = new Path();
+                invalidate();
+
                 //mPath.lineTo(mX, mY);
                 //mDrawCanvas.drawPath(mPath, mDrawPaint);
                 //mPath.reset();
+
                 break;
             default:
                 return false;
         }
-        invalidate();
         return true;
     }
 
     public void setColor(String newColor) {
-        invalidate();
         this.mPaintColor = Color.parseColor(newColor);
-        mDrawPaint.setColor(mPaintColor);
+        //mDrawPaint.setColor(mPaintColor);
+        if(mPaintColor != 0 && !mEraseMode) {
+            previousColor = mPaintColor;
+            mPreviousBrushSize = mBrushSize;
+            //System.out.println("Ennen " + mPaintColor);
+            //String hexColor = String.format("#%06X", (0xFFFFFF & previousColor));
+            //setColor(hexColor);
+            mDrawPaint.setColor(mPaintColor);
+            //mBrushSize = mPreviousBrushSize;
+            mDrawPaint.setStrokeWidth(mBrushSize);
+            //System.out.println("Jälkeen " + mPaintColor);
+        } else {
+            mDrawPaint.setColor(mPaintColor);
+            mDrawPaint.setStrokeWidth(mBrushSize);
+        }
+        invalidate();
     }
 
     public void setBrushSize(float newSize) {
+        //String hexColor = String.format("#%06X", (0xFFFFFF & mPaintColor));
+        //System.out.println(hexColor);
+        //setColor(hexColor);
         float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 newSize, getResources().getDisplayMetrics());
         this.mBrushSize = pixelAmount;
@@ -182,9 +190,17 @@ public class PaintView extends View {
     public void setEraseMode(boolean isErase) {
         mEraseMode = isErase;
         if(mEraseMode) {
-            mDrawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            //mDrawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            if(mPaintColor != Color.WHITE) {
+                setColor("#FFFFFF");
+            }
         } else {
-            mDrawPaint.setXfermode(null);
+            System.out.println("PREV ERASE " + previousColor);
+            System.out.println("CURR ERASE " + mPaintColor);
+            mPaintColor = previousColor;
+            mDrawPaint.setColor(mPaintColor);
+            //setColor("#FFFFFF");
+            //mDrawPaint.setXfermode(null);
         }
     }
 
