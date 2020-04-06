@@ -69,9 +69,6 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
-        //canvas.drawPath(mPath, mDrawPaint);
-
         if(!redoOrUndoPressed) {
             canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
             canvas.drawPath(mPath, mDrawPaint);
@@ -137,11 +134,6 @@ public class PaintView extends View {
                 paths.add(d);
                 mPath = new Path();
                 invalidate();
-
-                //mPath.lineTo(mX, mY);
-                //mDrawCanvas.drawPath(mPath, mDrawPaint);
-                //mPath.reset();
-
                 break;
             default:
                 return false;
@@ -151,17 +143,11 @@ public class PaintView extends View {
 
     public void setColor(String newColor) {
         this.mPaintColor = Color.parseColor(newColor);
-        //mDrawPaint.setColor(mPaintColor);
         if(mPaintColor != 0 && !mEraseMode) {
             previousColor = mPaintColor;
             mPreviousBrushSize = mBrushSize;
-            //System.out.println("Ennen " + mPaintColor);
-            //String hexColor = String.format("#%06X", (0xFFFFFF & previousColor));
-            //setColor(hexColor);
             mDrawPaint.setColor(mPaintColor);
-            //mBrushSize = mPreviousBrushSize;
             mDrawPaint.setStrokeWidth(mBrushSize);
-            //System.out.println("Jälkeen " + mPaintColor);
         } else {
             mDrawPaint.setColor(mPaintColor);
             mDrawPaint.setStrokeWidth(mBrushSize);
@@ -170,9 +156,6 @@ public class PaintView extends View {
     }
 
     public void setBrushSize(float newSize) {
-        //String hexColor = String.format("#%06X", (0xFFFFFF & mPaintColor));
-        //System.out.println(hexColor);
-        //setColor(hexColor);
         float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 newSize, getResources().getDisplayMetrics());
         this.mBrushSize = pixelAmount;
@@ -190,7 +173,6 @@ public class PaintView extends View {
     public void setEraseMode(boolean isErase) {
         mEraseMode = isErase;
         if(mEraseMode) {
-            //mDrawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
             if(mPaintColor != Color.WHITE) {
                 setColor("#FFFFFF");
             }
@@ -199,8 +181,6 @@ public class PaintView extends View {
             System.out.println("CURR ERASE " + mPaintColor);
             mPaintColor = previousColor;
             mDrawPaint.setColor(mPaintColor);
-            //setColor("#FFFFFF");
-            //mDrawPaint.setXfermode(null);
         }
     }
 
