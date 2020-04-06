@@ -98,6 +98,7 @@ public class PaintView extends View {
         float touchY = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                undo.clear();
                 mPath.reset();
 
                     if(mPaintColor != 0 && !mEraseMode) {
@@ -205,6 +206,8 @@ public class PaintView extends View {
     }
 
     public void startNew() {
+        paths.clear();
+        undo.clear();
         mDrawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         invalidate();
     }
@@ -212,6 +215,14 @@ public class PaintView extends View {
     public void removeRecentPath() {
         if(paths.size() > 0) {
             undo.add(paths.remove(paths.size() - 1));
+            something = true;
+            invalidate();
+        }
+    }
+
+    public void redoRecentPath() {
+        if(undo.size() > 0) {
+            paths.add(undo.remove(undo.size() - 1));
             something = true;
             invalidate();
         }

@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_share:
                 // Share button logic
+                mPaintView.redoRecentPath();
                 break;
         }
     }
