@@ -30,7 +30,12 @@ public class PaintView extends View {
     private boolean mEraseMode = false;
     private MaskFilter mBlur;
     private boolean mBlurMode = false;
-    private ArrayList<Path> paths = new ArrayList<>();
+    private int backgroundColor = Color.WHITE;
+    private ArrayList<DrawPath> paths = new ArrayList<>();
+    private ArrayList<DrawPath> undo = new ArrayList<>();
+    float mX = 0;
+    float mY = 0;
+    boolean something = false;
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -63,8 +68,36 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if(!something) {
+            canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
+            canvas.drawPath(mPath, mDrawPaint);
+        }
+        /*
+        canvas.save();
+        mDrawCanvas.drawColor(backgroundColor);
+        for (DrawPath dp : paths) {
+            mDrawPaint.setColor(dp.color);
+            mDrawPaint.setStrokeWidth(dp.strokeWidth);
+            //mDrawCanvas.drawPath(dp.path, mDrawPaint);
+        }
         canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
-        canvas.drawPath(mPath, mDrawPaint);
+        canvas.restore();
+        */
+        if(something) {
+            System.out.println(paths);
+            canvas.save();
+            mDrawCanvas.drawColor(backgroundColor);
+            for (DrawPath dp : paths) {
+                mDrawPaint.setColor(dp.color);
+                mDrawPaint.setStrokeWidth(dp.strokeWidth);
+                mDrawCanvas.drawPath(dp.path, mDrawPaint);
+            }
+            canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
+            canvas.restore();
+            something = false;
+        }
+        //System.out.println(paths);
+        // invalidate();
     }
 
     @Override
@@ -73,14 +106,50 @@ public class PaintView extends View {
         float touchY = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                //mPath = new Path();
+                //DrawPath d = new DrawPath(mPaintColor, 10, mPath);
+                //paths.add(d);
+                mPath.reset();
                 mPath.moveTo(touchX, touchY);
+                mX = touchX;
+                mY = touchY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                mPath.lineTo(touchX, touchY);
+                //mPath.lineTo(touchX, touchY);
+                //mX = touchX;
+                //mY = touchY;
+                float dx = Math.abs(touchX - mX);
+                float dy = Math.abs(touchY - mY);
+                if (dx >= 4 || dy >= 4) {
+                    mPath.quadTo(mX, mY, (touchX + mX) / 2, (touchY + mY) / 2);
+                    mX = touchX;
+                    mY = touchY;
+                }
                 break;
             case MotionEvent.ACTION_UP:
-                mDrawCanvas.drawPath(mPath, mDrawPaint);
-                mPath.reset();
+                if(something) {
+                    System.out.println("SOMETHING TRUE");
+                    System.out.println(mPaintColor);
+                    System.out.println(mBrushSize);
+                    mPath.lineTo(mX, mY);
+                    mDrawCanvas.drawPath(mPath, mDrawPaint);
+                    //mPath.reset();
+                    //mPath = new Path();
+                } else {
+                    System.out.println("SOMETHING FALSE");
+                    System.out.println(mPaintColor);
+                    System.out.println(mBrushSize);
+                    mPath.lineTo(mX, mY);
+                    mDrawCanvas.drawPath(mPath, mDrawPaint);
+                    //DrawPath d = new DrawPath(mPaintColor, (int)mBrushSize, mPath);
+                    DrawPath d = new DrawPath(mPaintColor, (int)mBrushSize, mPath);
+                    paths.add(d);
+                    //mPath.reset();
+                    mPath = new Path();
+                }
+                //mPath.lineTo(mX, mY);
+                //mDrawCanvas.drawPath(mPath, mDrawPaint);
+                //mPath.reset();
                 break;
             default:
                 return false;
@@ -125,9 +194,9 @@ public class PaintView extends View {
     }
 
     public void removeRecentPath() {
-        if(!paths.isEmpty()) {
-            System.out.println(paths.size());
-            paths.remove(paths.get(paths.size() -1 ));
+        if(paths.size() > 0) {
+            undo.add(paths.remove(paths.size() - 1));
+            something = true;
             invalidate();
         }
     }

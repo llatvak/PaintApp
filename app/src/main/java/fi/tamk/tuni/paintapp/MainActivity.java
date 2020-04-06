@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void colorClicked(View view) {
         mPaintView.setEraseMode(false);
-        mPaintView.setBrushSize(mPaintView.getLastBrushSize());
+        //mPaintView.setBrushSize(mPaintView.getLastBrushSize());
         if(view != mCurrentPaint) {
             ImageButton imgView = (ImageButton) view;
             String color = view.getTag().toString();
