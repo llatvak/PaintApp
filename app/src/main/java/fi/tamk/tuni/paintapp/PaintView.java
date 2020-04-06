@@ -9,7 +9,6 @@ import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -35,7 +34,7 @@ public class PaintView extends View {
     private ArrayList<DrawPath> undo = new ArrayList<>();
     float mX = 0;
     float mY = 0;
-    boolean something = false;
+    boolean redoOrUndoPressed = false;
     private int previousColor;
     private float mPreviousBrushSize;
 
@@ -73,12 +72,12 @@ public class PaintView extends View {
         //canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
         //canvas.drawPath(mPath, mDrawPaint);
 
-        if(!something) {
+        if(!redoOrUndoPressed) {
             canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
             canvas.drawPath(mPath, mDrawPaint);
         }
 
-        if(something) {
+        if(redoOrUndoPressed) {
             canvas.save();
             mDrawCanvas.drawColor(backgroundColor);
             for (DrawPath dp : paths) {
@@ -88,7 +87,7 @@ public class PaintView extends View {
             }
             canvas.drawBitmap(mCanvasBitmap, 0, 0, mCanvasPaint);
             canvas.restore();
-            something = false;
+            redoOrUndoPressed = false;
         }
     }
 
@@ -215,7 +214,7 @@ public class PaintView extends View {
     public void removeRecentPath() {
         if(paths.size() > 0) {
             undo.add(paths.remove(paths.size() - 1));
-            something = true;
+            redoOrUndoPressed = true;
             invalidate();
         }
     }
@@ -223,7 +222,7 @@ public class PaintView extends View {
     public void redoRecentPath() {
         if(undo.size() > 0) {
             paths.add(undo.remove(undo.size() - 1));
-            something = true;
+            redoOrUndoPressed = true;
             invalidate();
         }
     }
