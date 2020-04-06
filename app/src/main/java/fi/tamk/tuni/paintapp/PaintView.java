@@ -36,7 +36,6 @@ public class PaintView extends View {
     float mY = 0;
     boolean redoOrUndoPressed = false;
     private int previousColor;
-    private float mPreviousBrushSize;
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -99,15 +98,12 @@ public class PaintView extends View {
 
                     if(mPaintColor != 0 && !mEraseMode) {
                         previousColor = mPaintColor;
-                        mPreviousBrushSize = mBrushSize;
                         System.out.println("Ennen " + mPaintColor);
                         String hexColor = String.format("#%06X", (0xFFFFFF & previousColor));
                         setColor(hexColor);
-                        mBrushSize = mPreviousBrushSize;
                         System.out.println("Jälkeen " + mPaintColor);
                     } else {
                         mDrawPaint.setColor(mPaintColor);
-                        mDrawPaint.setStrokeWidth(mBrushSize);
                     }
 
                 mPath.moveTo(touchX, touchY);
@@ -141,16 +137,21 @@ public class PaintView extends View {
         return true;
     }
 
+    private float prevBrushSize;
     public void setColor(String newColor) {
         this.mPaintColor = Color.parseColor(newColor);
         if(mPaintColor != 0 && !mEraseMode) {
             previousColor = mPaintColor;
-            mPreviousBrushSize = mBrushSize;
+            //mPreviousBrushSize = mBrushSize;
             mDrawPaint.setColor(mPaintColor);
-            mDrawPaint.setStrokeWidth(mBrushSize);
+            //mDrawPaint.setStrokeWidth(getLastBrushSize());
+            //mLastBrushSize = mBrushSize;
+            prevBrushSize = mBrushSize;
+            mDrawPaint.setStrokeWidth(prevBrushSize);
         } else {
             mDrawPaint.setColor(mPaintColor);
-            mDrawPaint.setStrokeWidth(mBrushSize);
+            //mDrawPaint.setStrokeWidth(getLastBrushSize());
+            //mDrawPaint.setStrokeWidth(mBrushSize);
         }
         invalidate();
     }
@@ -177,8 +178,6 @@ public class PaintView extends View {
                 setColor("#FFFFFF");
             }
         } else {
-            System.out.println("PREV ERASE " + previousColor);
-            System.out.println("CURR ERASE " + mPaintColor);
             mPaintColor = previousColor;
             mDrawPaint.setColor(mPaintColor);
         }
