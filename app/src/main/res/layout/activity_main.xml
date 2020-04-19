@@ -261,7 +261,7 @@
                 android:contentDescription="@string/paint"
                 android:onClick="colorClicked"
                 android:src="@drawable/paint"
-                android:tag="#7092BE" />
+                android:tag="#E91E63" />
 
             <ImageButton
                 android:layout_width="@dimen/large_brush"
