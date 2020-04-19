@@ -71,6 +71,17 @@
             android:src="@drawable/ic_redo" />
     </LinearLayout>
 
+    <fi.tamk.tuni.paintapp.PaintView
+        android:id="@+id/paint_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_weight="1"
+        android:background="#FFFFFFFF" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -315,21 +326,5 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <fi.tamk.tuni.paintapp.PaintView
-        android:id="@+id/paint_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="3dp"
-        android:layout_weight="1"
-        android:background="#FFFFFFFF" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:background="#DEDEDE" />
 
 </LinearLayout>
