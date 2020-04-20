@@ -7,12 +7,24 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class StartActivity extends AppCompatActivity {
+
+    View mRectangleView;
+    int mDefaultColor;
+    Button mButtonShowColors;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_start);
+        // Get rectangle template view to change background color to chosen/default
+        mRectangleView = findViewById(R.id.myRectangleView);
+        mDefaultColor = ContextCompat.getColor(this, R.color.colorPrimary);
+        // Init show color button
+        mButtonShowColors = findViewById(R.id.show_colors);
+        mButtonShowColors.setOnClickListener(this::showColorPicker) ;
     }
 
     public void startClicked(View v) {
@@ -21,8 +33,8 @@ public class StartActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    // Functionality of show color button
     public void showColorPicker(View v) {
-        Button b = findViewById(R.id.show_colors);
 
     }
 
