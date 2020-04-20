@@ -47,17 +47,29 @@
 
     <ImageButton
         android:id="@+id/button_start"
-        android:contentDescription="@string/start_drawing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_create_drawing"
+        android:layout_marginEnd="56dp"
         android:backgroundTint="#FAFAFA"
+        android:contentDescription="@string/start_drawing"
         android:onClick="startClicked"
+        android:src="@drawable/ic_create_drawing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.848"
+        app:layout_constraintTop_toBottomOf="@+id/myRectangleView"
+        app:layout_constraintVertical_bias="0.17" />
+
+    <Button
+        android:id="@+id/show_colors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show color picker"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_start"
+        app:layout_constraintHorizontal_bias="0.796"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myRectangleView"
-        app:layout_constraintVertical_bias="0.208" />
+        app:layout_constraintVertical_bias="0.303" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
