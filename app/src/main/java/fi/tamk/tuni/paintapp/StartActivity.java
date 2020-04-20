@@ -18,6 +18,9 @@ import java.util.UUID;
 
 /**
  * Class to hold UI actions and initialization of {@link PaintView}
+ *
+ * @author Lauri Latva-Kyyny
+ * @version 1.0
  */
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 

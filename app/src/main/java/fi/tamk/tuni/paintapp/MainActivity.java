@@ -12,6 +12,9 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 /**
  * Main activity to start application, holds preview functionality.
+ *
+ * @author Lauri Latva-Kyyny
+ * @version 1.0
  */
 public class MainActivity extends AppCompatActivity {
 
