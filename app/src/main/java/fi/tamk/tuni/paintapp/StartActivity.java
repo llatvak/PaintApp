@@ -10,12 +10,29 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
+/**
+ * Main activity to start application, holds preview functionality.
+ */
 public class StartActivity extends AppCompatActivity {
 
+    /**
+     * Custom preview view to see background color on canvas.
+     */
     private View mRectangleView;
+    /**
+     * Default background color for canvas.
+     */
     private int mDefaultColor;
+    /**
+     * Button to show color picker dialog.
+     */
     private Button mButtonShowColors;
 
+    /**
+     * Initialize default values and views.
+     *
+     * @param savedInstanceState current saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +45,11 @@ public class StartActivity extends AppCompatActivity {
         mButtonShowColors.setOnClickListener(this::showColorPicker) ;
     }
 
+    /**
+     * When new drawing is started send chosen background color to be set.
+     *
+     * @param v current view element
+     */
     public void startClicked(View v) {
         ImageButton b = findViewById(R.id.button_start);
         Intent i = new Intent(this, MainActivity.class);
@@ -35,6 +57,11 @@ public class StartActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    /**
+     * Color picker dialog checking.
+     *
+     * @param v current view element
+     */
     // Functionality of show color button
     public void showColorPicker(View v) {
         AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this, mDefaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
@@ -45,6 +72,7 @@ public class StartActivity extends AppCompatActivity {
 
             @Override
             public void onOk(AmbilWarnaDialog dialog, int color) {
+                // Check which color is chosen and set it to background color of the custom view.
                 mDefaultColor = color;
                 mRectangleView.setBackgroundColor(mDefaultColor);
             }
