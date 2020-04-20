@@ -9,7 +9,6 @@ import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -29,31 +28,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        // Set background color of canvas
         mPaintView = (PaintView) findViewById(R.id.paint_view);
+        mPaintView.setBackgroundColor(getIntent().getIntExtra("background_color",0));
+        mPaintView.setCurrentBackgroundColor(getIntent().getIntExtra("background_color",0));
+
         // Retrieve color currently used by user from the color layout
         LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors1);
         mCurrentPaint = (ImageButton) paintLayout.getChildAt(0);
         mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+
         // Init brush sizes
         mXtraSmallBrush = getResources().getInteger(R.integer.xtra_small_size);
         mSmallBrush = getResources().getInteger(R.integer.small_size);
         mMediumBrush = getResources().getInteger(R.integer.medium_size);
         mLargeBrush = getResources().getInteger(R.integer.large_size);
+
         // Init brush button
         mBrushButton = (ImageButton) findViewById(R.id.button_brush);
         mBrushButton.setOnClickListener(this);
+
         // Init erase button
         mEraseButton = (ImageButton) findViewById(R.id.button_erase);
         mEraseButton.setOnClickListener(this);
+
         // Init new draw button
         mNewButton = (ImageButton) findViewById(R.id.button_new_file);
         mNewButton.setOnClickListener(this);
+
         // Init save file button
         mSaveButton = (ImageButton) findViewById(R.id.button_save);
         mSaveButton.setOnClickListener(this);
+
         // Init undo button
         mUndoButton = (ImageButton) findViewById(R.id.button_undo);
         mUndoButton.setOnClickListener(this);
+
         // Init redo button
         mRedoButton = (ImageButton) findViewById(R.id.button_redo);
         mRedoButton.setOnClickListener(this);
@@ -147,23 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_save:
                 if (checkPermission()) {
-                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
-                    saveDialog.setTitle("Save drawing");
-                    saveDialog.setMessage("Save drawing to device Gallery?");
-                    saveDialog.setPositiveButton("Yes", (l, w) -> {
-                        mPaintView.setDrawingCacheEnabled(true);
-                        String imgSaved = MediaStore.Images.Media.insertImage(
-                                getContentResolver(), mPaintView.getDrawingCache(),
-                                UUID.randomUUID().toString() + ".png", "drawing");
-                        if (imgSaved != null) {
-                            Toast.makeText(getApplicationContext(), "Drawing saved to Gallery!", Toast.LENGTH_SHORT).show();
-                            mPaintView.destroyDrawingCache();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Oops! Image could not be saved.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    saveDialog.setNegativeButton("Cancel", (l, w) -> l.cancel());
-                    saveDialog.show();
+                    saveFileToGallery();
                 } else {
                     requestPermission();
                 }
@@ -187,6 +181,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void saveFileToGallery() {
+        AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
+        saveDialog.setTitle("Save drawing");
+        saveDialog.setMessage("Save drawing to device Gallery?");
+        saveDialog.setPositiveButton("Yes", (l, w) -> {
+            mPaintView.setDrawingCacheEnabled(true);
+            String imgSaved = MediaStore.Images.Media.insertImage(
+                    getContentResolver(), mPaintView.getDrawingCache(),
+                    UUID.randomUUID().toString() + ".png", "drawing");
+            if (imgSaved != null) {
+                Toast.makeText(getApplicationContext(), "Drawing saved to Gallery!", Toast.LENGTH_SHORT).show();
+                mPaintView.destroyDrawingCache();
+            } else {
+                Toast.makeText(getApplicationContext(), "Oops! Image could not be saved.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        saveDialog.setNegativeButton("Cancel", (l, w) -> l.cancel());
+        saveDialog.show();
+    }
+
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
@@ -194,14 +208,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.e("value", "Permission Granted, Now you can use local drive .");
-            } else {
-                Log.e("value", "Permission Denied, You cannot use local drive .");
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                saveFileToGallery();
             }
-            break;
         }
     }
 }
