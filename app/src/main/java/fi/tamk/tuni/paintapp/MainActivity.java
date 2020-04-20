@@ -158,23 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_save:
                 if (checkPermission()) {
-                    AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
-                    saveDialog.setTitle("Save drawing");
-                    saveDialog.setMessage("Save drawing to device Gallery?");
-                    saveDialog.setPositiveButton("Yes", (l, w) -> {
-                        mPaintView.setDrawingCacheEnabled(true);
-                        String imgSaved = MediaStore.Images.Media.insertImage(
-                                getContentResolver(), mPaintView.getDrawingCache(),
-                                UUID.randomUUID().toString() + ".png", "drawing");
-                        if (imgSaved != null) {
-                            Toast.makeText(getApplicationContext(), "Drawing saved to Gallery!", Toast.LENGTH_SHORT).show();
-                            mPaintView.destroyDrawingCache();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Oops! Image could not be saved.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    saveDialog.setNegativeButton("Cancel", (l, w) -> l.cancel());
-                    saveDialog.show();
+                    saveFileToGallery();
                 } else {
                     requestPermission();
                 }
@@ -198,6 +182,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void saveFileToGallery() {
+        AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
+        saveDialog.setTitle("Save drawing");
+        saveDialog.setMessage("Save drawing to device Gallery?");
+        saveDialog.setPositiveButton("Yes", (l, w) -> {
+            mPaintView.setDrawingCacheEnabled(true);
+            String imgSaved = MediaStore.Images.Media.insertImage(
+                    getContentResolver(), mPaintView.getDrawingCache(),
+                    UUID.randomUUID().toString() + ".png", "drawing");
+            if (imgSaved != null) {
+                Toast.makeText(getApplicationContext(), "Drawing saved to Gallery!", Toast.LENGTH_SHORT).show();
+                mPaintView.destroyDrawingCache();
+            } else {
+                Toast.makeText(getApplicationContext(), "Oops! Image could not be saved.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        saveDialog.setNegativeButton("Cancel", (l, w) -> l.cancel());
+        saveDialog.show();
+    }
+
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
@@ -208,10 +212,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.e("value", "Permission Granted, Now you can use local drive .");
-            } else {
-                Log.e("value", "Permission Denied, You cannot use local drive .");
-            }
+                    saveFileToGallery();
+                }
             break;
         }
     }

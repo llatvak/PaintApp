@@ -2,10 +2,8 @@ package fi.tamk.tuni.paintapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -27,8 +25,6 @@ public class PaintView extends View {
     private Bitmap mCanvasBitmap;
     private float mBrushSize, mLastBrushSize;
     private boolean mEraseMode = false;
-    private MaskFilter mBlur;
-    private boolean mBlurMode = false;
     private int backgroundColor;
     private ArrayList<DrawPath> paths = new ArrayList<>();
     private ArrayList<DrawPath> undo = new ArrayList<>();
@@ -55,8 +51,6 @@ public class PaintView extends View {
         mCanvasPaint = new Paint(Paint.DITHER_FLAG);
         mBrushSize = getResources().getInteger(R.integer.small_size);
         mLastBrushSize = mBrushSize;
-
-        mBlur = new BlurMaskFilter(mBrushSize, BlurMaskFilter.Blur.NORMAL);
         mDrawPaint.setStrokeWidth(mBrushSize);
     }
 
@@ -99,10 +93,8 @@ public class PaintView extends View {
 
                     if(mPaintColor != 0 && !mEraseMode) {
                         previousColor = mPaintColor;
-                        System.out.println("Ennen " + mPaintColor);
                         String hexColor = String.format("#%06X", (0xFFFFFF & previousColor));
                         setColor(hexColor);
-                        System.out.println("Jälkeen " + mPaintColor);
                     } else {
                         mDrawPaint.setColor(mPaintColor);
                     }
@@ -152,9 +144,8 @@ public class PaintView extends View {
     }
 
     public void setBrushSize(float newSize) {
-        float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+        this.mBrushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 newSize, getResources().getDisplayMetrics());
-        this.mBrushSize = pixelAmount;
         mDrawPaint.setStrokeWidth(mBrushSize);
     }
 
@@ -169,9 +160,6 @@ public class PaintView extends View {
     public void setEraseMode(boolean isErase) {
         mEraseMode = isErase;
         if(mEraseMode) {
-            /*if(mPaintColor != Color.WHITE) {
-                setColor("#FFFFFF");
-            }*/
             String hexColor = String.format("#%06X", (0xFFFFFF & backgroundColor));
             setColor(hexColor);
         } else {
