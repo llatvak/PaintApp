@@ -2,10 +2,8 @@ package fi.tamk.tuni.paintapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -18,6 +16,18 @@ import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 
+
+/**
+ * Custom view that holds paint's tool functions and canvas attributes.
+ * <p>
+ * Holds attributes and lists for paths needed for drawing to canvas.
+ * Initializes paint attributes and holds functionality for tools.
+ * Handles the touch input and draws lines based on that.
+ * </p>
+ *
+ * @author Lauri Latva-Kyyny
+ * @version 1.0
+ */
 public class PaintView extends View {
 
     private Path mPath;
@@ -27,22 +37,38 @@ public class PaintView extends View {
     private Bitmap mCanvasBitmap;
     private float mBrushSize, mLastBrushSize;
     private boolean mEraseMode = false;
-    private MaskFilter mBlur;
-    private boolean mBlurMode = false;
-    private int backgroundColor = Color.WHITE;
+    private int backgroundColor;
+    /**
+     * Current paths drawn, only queried when undo is pressed.
+     */
     private ArrayList<DrawPath> paths = new ArrayList<>();
+    /**
+     * Undone paths, only queried when redo pressed, reset when new line is drawn.
+     */
     private ArrayList<DrawPath> undo = new ArrayList<>();
     float mX = 0;
     float mY = 0;
+    /**
+     * Determine when user pressed redo or undo button to draw paths from list.
+     */
     boolean redoOrUndoPressed = false;
     private int previousColor;
+    private float prevBrushSize;
 
+    /**
+     * Constructor that initializes paint view.
+     *
+     * @param context current app context
+     * @param attrs current attribute set
+     */
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        //setLayerType(LAYER_TYPE_SOFTWARE, null);
         initializePaintView();
     }
 
+    /**
+     * Initializes all required attributes needed for drawing and sets default values.
+     */
     public void initializePaintView() {
         mPath = new Path();
         mDrawPaint = new Paint();
@@ -55,10 +81,17 @@ public class PaintView extends View {
         mCanvasPaint = new Paint(Paint.DITHER_FLAG);
         mBrushSize = getResources().getInteger(R.integer.small_size);
         mLastBrushSize = mBrushSize;
-        mBlur = new BlurMaskFilter(mBrushSize, BlurMaskFilter.Blur.NORMAL);
         mDrawPaint.setStrokeWidth(mBrushSize);
     }
 
+    /**
+     * When size is changed create bitmap and save it to attribute and create new canvas.
+     *
+     * @param width new width
+     * @param height new height
+     * @param oldWidth old width
+     * @param oldHeight old height
+     */
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
@@ -66,6 +99,18 @@ public class PaintView extends View {
         mDrawCanvas = new Canvas(mCanvasBitmap);
     }
 
+    /**
+     * Called when path is drawn to screen from touch input.
+     * <p>
+     * Determines if user has pressed redo or undo, if so queries list and draws paths based
+     * on that.
+     * Adds attributes for drawn paths to custom {@link DrawPath} class.
+     * If redo or undo is not pressed draws paths one at a time, so performance is kept
+     * steady with no lag, even there are lot of paths.
+     * </p>
+     *
+     * @param canvas current canvas to draw into
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         if(!redoOrUndoPressed) {
@@ -87,32 +132,37 @@ public class PaintView extends View {
         }
     }
 
+    /**
+     * Handles touch input and draws paths based on the feedback.
+     *
+     * @param event touch input event from pressing screen
+     * @return returns boolean to end input
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float touchX = event.getX();
         float touchY = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                // Clear undo list when new path drawn and reset current path.
                 undo.clear();
                 mPath.reset();
-
-                    if(mPaintColor != 0 && !mEraseMode) {
-                        previousColor = mPaintColor;
-                        System.out.println("Ennen " + mPaintColor);
-                        String hexColor = String.format("#%06X", (0xFFFFFF & previousColor));
-                        setColor(hexColor);
-                        System.out.println("Jälkeen " + mPaintColor);
-                    } else {
-                        mDrawPaint.setColor(mPaintColor);
-                    }
-
+                // Check if erase mode is not on or paint color is set
+                if(mPaintColor != 0 && !mEraseMode) {
+                    previousColor = mPaintColor;
+                    String hexColor = String.format("#%06X", (0xFFFFFF & previousColor));
+                    setColor(hexColor);
+                } else {
+                    mDrawPaint.setColor(mPaintColor);
+                }
+                // Move to position and reset canvas
                 mPath.moveTo(touchX, touchY);
                 mX = touchX;
                 mY = touchY;
                 invalidate();
-
                 break;
             case MotionEvent.ACTION_MOVE:
+                // Calculate smooth path from moving and reset canvas
                 float dx = Math.abs(touchX - mX);
                 float dy = Math.abs(touchY - mY);
                 if (dx >= 4 || dy >= 4) {
@@ -121,9 +171,9 @@ public class PaintView extends View {
                     mY = touchY;
                 }
                 invalidate();
-
                 break;
             case MotionEvent.ACTION_UP:
+                // End drawing line, add to drawn paths list and rest canvas
                 mPath.lineTo(mX, mY);
                 mDrawCanvas.drawPath(mPath, mDrawPaint);
                 DrawPath d = new DrawPath(mPaintColor, (int)mBrushSize, mPath);
@@ -137,52 +187,72 @@ public class PaintView extends View {
         return true;
     }
 
-    private float prevBrushSize;
+    /**
+     * Change color of the brush.
+     *
+     * @param newColor new color to replace old one
+     */
     public void setColor(String newColor) {
         this.mPaintColor = Color.parseColor(newColor);
         if(mPaintColor != 0 && !mEraseMode) {
             previousColor = mPaintColor;
-            //mPreviousBrushSize = mBrushSize;
             mDrawPaint.setColor(mPaintColor);
-            //mDrawPaint.setStrokeWidth(getLastBrushSize());
-            //mLastBrushSize = mBrushSize;
             prevBrushSize = mBrushSize;
             mDrawPaint.setStrokeWidth(prevBrushSize);
         } else {
             mDrawPaint.setColor(mPaintColor);
-            //mDrawPaint.setStrokeWidth(getLastBrushSize());
-            //mDrawPaint.setStrokeWidth(mBrushSize);
         }
         invalidate();
     }
 
+    /**
+     * Set brush size to new one.
+     *
+     * @param newSize new brush size to replace old one
+     */
     public void setBrushSize(float newSize) {
-        float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+        this.mBrushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 newSize, getResources().getDisplayMetrics());
-        this.mBrushSize = pixelAmount;
         mDrawPaint.setStrokeWidth(mBrushSize);
     }
 
+    /**
+     * Sets the last brush size.
+     *
+     * @param lastSize last brush size to be set
+     */
     public void setLastBrushSize(float lastSize) {
         this.mLastBrushSize = lastSize;
     }
 
+    /**
+     * Get last brush size.
+     *
+     * @return last brush size to get
+     */
     public float getLastBrushSize() {
         return mLastBrushSize;
     }
 
+    /**
+     * Sets erase mode to set to clear paths to default color.
+     *
+     * @param isErase is erasemode on or not
+     */
     public void setEraseMode(boolean isErase) {
         mEraseMode = isErase;
         if(mEraseMode) {
-            if(mPaintColor != Color.WHITE) {
-                setColor("#FFFFFF");
-            }
+            String hexColor = String.format("#%06X", (0xFFFFFF & backgroundColor));
+            setColor(hexColor);
         } else {
             mPaintColor = previousColor;
             mDrawPaint.setColor(mPaintColor);
         }
     }
 
+    /**
+     * Clear canvas and paths when reset button clicked.
+     */
     public void startNew() {
         paths.clear();
         undo.clear();
@@ -190,6 +260,9 @@ public class PaintView extends View {
         invalidate();
     }
 
+    /**
+     * Undo the most recent path from current paths list and reset canvas.
+     */
     public void removeRecentPath() {
         if(paths.size() > 0) {
             undo.add(paths.remove(paths.size() - 1));
@@ -198,11 +271,23 @@ public class PaintView extends View {
         }
     }
 
+    /**
+     * If undone path list is not empty redo paths and add them to current paths list.
+     */
     public void redoRecentPath() {
         if(undo.size() > 0) {
             paths.add(undo.remove(undo.size() - 1));
             redoOrUndoPressed = true;
             invalidate();
         }
+    }
+
+    /**
+     * Sets current background color.
+     *
+     * @param color current background color to set
+     */
+    public void setCurrentBackgroundColor(int color) {
+        backgroundColor = color;
     }
 }

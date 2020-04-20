@@ -12,4 +12,6 @@
     <string name="med">Medium</string>
     <string name="lrg">Large</string>
     <string name="redo">Redo</string>
+    <string name="start_drawing">Start a new drawing</string>
+    <string name="bgr_color_choose">Choose background color</string>
 </resources>
