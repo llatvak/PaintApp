@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".StartActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:layout_marginEnd="8dp"
             android:backgroundTint="#00BCD4"
             android:contentDescription="@string/erase"
-            android:src="@drawable/ic_erase" />
+            android:src="@drawable/erase" />
 
         <ImageButton
             android:id="@+id/button_save"
