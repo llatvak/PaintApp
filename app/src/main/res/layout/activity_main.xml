@@ -41,7 +41,7 @@
             android:layout_marginEnd="8dp"
             android:backgroundTint="#00BCD4"
             android:contentDescription="@string/erase"
-            android:src="@drawable/ic_erase" />
+            android:src="@drawable/erase" />
 
         <ImageButton
             android:id="@+id/button_save"
