@@ -12,9 +12,9 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class StartActivity extends AppCompatActivity {
 
-    View mRectangleView;
-    int mDefaultColor;
-    Button mButtonShowColors;
+    private View mRectangleView;
+    private int mDefaultColor;
+    private Button mButtonShowColors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,7 @@ public class StartActivity extends AppCompatActivity {
     public void startClicked(View v) {
         ImageButton b = findViewById(R.id.button_start);
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("background_color", mDefaultColor);
         startActivity(i);
     }
 
@@ -50,6 +51,4 @@ public class StartActivity extends AppCompatActivity {
         });
         colorPicker.show();
     }
-
-
 }

@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         mPaintView = (PaintView) findViewById(R.id.paint_view);
+        mPaintView.setBackgroundColor(getIntent().getIntExtra("background_color",0));
         // Retrieve color currently used by user from the color layout
         LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors1);
         mCurrentPaint = (ImageButton) paintLayout.getChildAt(0);
