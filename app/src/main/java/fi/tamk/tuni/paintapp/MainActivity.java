@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -30,32 +29,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        // Set background color of canvas
         mPaintView = (PaintView) findViewById(R.id.paint_view);
         mPaintView.setBackgroundColor(getIntent().getIntExtra("background_color",0));
+
         // Retrieve color currently used by user from the color layout
         LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors1);
         mCurrentPaint = (ImageButton) paintLayout.getChildAt(0);
         mCurrentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+
         // Init brush sizes
         mXtraSmallBrush = getResources().getInteger(R.integer.xtra_small_size);
         mSmallBrush = getResources().getInteger(R.integer.small_size);
         mMediumBrush = getResources().getInteger(R.integer.medium_size);
         mLargeBrush = getResources().getInteger(R.integer.large_size);
+
         // Init brush button
         mBrushButton = (ImageButton) findViewById(R.id.button_brush);
         mBrushButton.setOnClickListener(this);
+
         // Init erase button
         mEraseButton = (ImageButton) findViewById(R.id.button_erase);
         mEraseButton.setOnClickListener(this);
+
         // Init new draw button
         mNewButton = (ImageButton) findViewById(R.id.button_new_file);
         mNewButton.setOnClickListener(this);
+
         // Init save file button
         mSaveButton = (ImageButton) findViewById(R.id.button_save);
         mSaveButton.setOnClickListener(this);
+
         // Init undo button
         mUndoButton = (ImageButton) findViewById(R.id.button_undo);
         mUndoButton.setOnClickListener(this);
+
         // Init redo button
         mRedoButton = (ImageButton) findViewById(R.id.button_redo);
         mRedoButton.setOnClickListener(this);
