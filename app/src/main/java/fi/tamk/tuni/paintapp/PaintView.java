@@ -29,17 +29,17 @@ public class PaintView extends View {
     private boolean mEraseMode = false;
     private MaskFilter mBlur;
     private boolean mBlurMode = false;
-    private int backgroundColor = Color.WHITE;
+    private int backgroundColor;
     private ArrayList<DrawPath> paths = new ArrayList<>();
     private ArrayList<DrawPath> undo = new ArrayList<>();
     float mX = 0;
     float mY = 0;
     boolean redoOrUndoPressed = false;
     private int previousColor;
+    private float prevBrushSize;
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        //setLayerType(LAYER_TYPE_SOFTWARE, null);
         initializePaintView();
     }
 
@@ -55,6 +55,7 @@ public class PaintView extends View {
         mCanvasPaint = new Paint(Paint.DITHER_FLAG);
         mBrushSize = getResources().getInteger(R.integer.small_size);
         mLastBrushSize = mBrushSize;
+
         mBlur = new BlurMaskFilter(mBrushSize, BlurMaskFilter.Blur.NORMAL);
         mDrawPaint.setStrokeWidth(mBrushSize);
     }
@@ -137,21 +138,15 @@ public class PaintView extends View {
         return true;
     }
 
-    private float prevBrushSize;
     public void setColor(String newColor) {
         this.mPaintColor = Color.parseColor(newColor);
         if(mPaintColor != 0 && !mEraseMode) {
             previousColor = mPaintColor;
-            //mPreviousBrushSize = mBrushSize;
             mDrawPaint.setColor(mPaintColor);
-            //mDrawPaint.setStrokeWidth(getLastBrushSize());
-            //mLastBrushSize = mBrushSize;
             prevBrushSize = mBrushSize;
             mDrawPaint.setStrokeWidth(prevBrushSize);
         } else {
             mDrawPaint.setColor(mPaintColor);
-            //mDrawPaint.setStrokeWidth(getLastBrushSize());
-            //mDrawPaint.setStrokeWidth(mBrushSize);
         }
         invalidate();
     }
@@ -174,9 +169,11 @@ public class PaintView extends View {
     public void setEraseMode(boolean isErase) {
         mEraseMode = isErase;
         if(mEraseMode) {
-            if(mPaintColor != Color.WHITE) {
+            /*if(mPaintColor != Color.WHITE) {
                 setColor("#FFFFFF");
-            }
+            }*/
+            String hexColor = String.format("#%06X", (0xFFFFFF & backgroundColor));
+            setColor(hexColor);
         } else {
             mPaintColor = previousColor;
             mDrawPaint.setColor(mPaintColor);
@@ -204,5 +201,9 @@ public class PaintView extends View {
             redoOrUndoPressed = true;
             invalidate();
         }
+    }
+
+    public void setCurrentBackgroundColor(int color) {
+        backgroundColor = color;
     }
 }
