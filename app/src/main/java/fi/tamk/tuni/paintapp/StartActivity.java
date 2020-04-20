@@ -16,13 +16,30 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import java.util.UUID;
 
+/**
+ * Class to hold UI actions and initialization of {@link PaintView}
+ */
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * Custom paint view.
+     */
     private PaintView mPaintView;
+    /**
+     * All tools as image buttons.
+     */
     private ImageButton mCurrentPaint, mBrushButton, mEraseButton, mNewButton, mSaveButton, mUndoButton, mRedoButton;
     private float mXtraSmallBrush, mSmallBrush, mMediumBrush, mLargeBrush;
+    /**
+     * Custom request code for permission checking.
+     */
     private static final int PERMISSION_REQUEST_CODE = 100;
 
+    /**
+     * Initialize {@link PaintView}, buttons and add click listeners.
+     *
+     * @param savedInstanceState current save instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,9 +86,13 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         mRedoButton.setOnClickListener(this);
     }
 
+    /**
+     * Set paint color to pressed mode and set color.
+     *
+     * @param view current view element
+     */
     public void colorClicked(View view) {
         mPaintView.setEraseMode(false);
-        //mPaintView.setBrushSize(mPaintView.getLastBrushSize());
         if(view != mCurrentPaint) {
             ImageButton imgView = (ImageButton) view;
             String color = view.getTag().toString();
@@ -82,16 +103,28 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * On click functionality when UI elements are pressed.
+     * <p>
+     * Hold tools like brush, erase, create new file, save, undo and redo click listener
+     * actions and call the correct methods from {@link PaintView}
+     * </p>
+     *
+     * @param v current view element
+     */
     @Override
     public void onClick(View v) {
+        // Init brush choosing dialog and set layout
         final Dialog brushDialog = new Dialog(this);
         brushDialog.setContentView(R.layout.brush_dialog_layout);
+        // Init buttons
         ImageButton xtraSmallBtn = (ImageButton)brushDialog.findViewById(R.id.xtra_small_brush);
         ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
         ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
         ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
         switch(v.getId()) {
             case R.id.button_brush:
+                // Open brush choosing dialog and update brush size from feedback.
                 brushDialog.show();
                 mPaintView.setBrushSize(mPaintView.getLastBrushSize());
                 xtraSmallBtn.setOnClickListener((l) -> {
@@ -120,6 +153,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 });
                 break;
             case R.id.button_erase:
+                // Show erase tool dialog and update size from feedback.
                 brushDialog.show();
                 xtraSmallBtn.setOnClickListener((l) -> {
                     mPaintView.setEraseMode(true);
@@ -143,19 +177,23 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 });
                 break;
             case R.id.button_new_file:
+                // Confirm action and clear file by calling PaintView method
                 AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
                 newDialog.setTitle("New drawing");
                 newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
                 newDialog.setPositiveButton("Yes", (l, w) -> {
+                    // Input ok
                     mPaintView.startNew();
                     l.dismiss();
                 });
                 newDialog.setNegativeButton("Cancel", (l, w) -> {
+                    // If not ok just cancel
                     l.cancel();
                 });
                 newDialog.show();
                 break;
             case R.id.button_save:
+                // Check permission first if not already given and save to gallery if permission given.
                 if (checkPermission()) {
                     saveFileToGallery();
                 } else {
@@ -173,6 +211,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Request permission if it has not been declined before, otherwise give toast to remind user.
+     */
     private void requestPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(StartActivity.this, "Write External Storage permission allows us to save files. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
@@ -181,6 +222,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Save file to device's gallery from dialog feedback.
+     */
     private void saveFileToGallery() {
         AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
         saveDialog.setTitle("Save drawing");
@@ -201,11 +245,23 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         saveDialog.show();
     }
 
+    /**
+     * Check if permission is given by the user.
+     *
+     * @return boolean value based on if the user has given permission
+     */
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(StartActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Called when permission is given, check permission code.
+     *
+     * @param requestCode current request code
+     * @param permissions current permissions in string array
+     * @param grantResults current results granted in int array
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
